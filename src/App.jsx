@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Login, Register } from './pages/Auth';
 import { ManageUsers, CreateTask, ManageTasks, Dashboard } from './pages/Admin';
-import { Dashboard, MyTasks } from './pages/User';
+import { UserDashboard, MyTasks } from './pages/User';
 
 const App = () => {
   return (
@@ -19,8 +19,9 @@ const App = () => {
         </Route>
         {/* User Routes */}
         <Route element={<PrivateRoute allowedRoles={["user"]} />}>
-          <Route path="/user/dashboard" element={<Dashboard />} />
+          <Route path="/user/user-dashboard" element={<UserDashboard />} />
           <Route path="/user/my-tasks" element={<MyTasks />} />
+          <Route path="/user/tasks-details/:id" element={<ViewTaskDetails />} />
         </Route>
       </Routes>
     </Router>
