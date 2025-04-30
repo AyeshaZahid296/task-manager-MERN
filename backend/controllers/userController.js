@@ -40,7 +40,7 @@ const getUsers = async (req, res) => {
 };
 
 
-//@desc     Get a specific User by ID
+//@desc     Get a specific User by ID.
 //@route    GET /api/users/:id
 //@access   Private 
 const getUserById = async (req, res) => {
