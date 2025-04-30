@@ -125,9 +125,7 @@ const updateUserProfile = async (req, res) => {
             role: updatedUser.role,
             profileImageUrl: user.profileImageUrl,
             token: generateToken(updatedUser._id),
-        })
-
-
+        });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message })
     }
