@@ -26,17 +26,79 @@ const getUserDashboardData = async (req, res) => {
 };
 
 
-//@desc     Get all Users (Admin only)
-//@route    GET /api/tasks
-//@access   Private (Admin)
+//@desc     Get all Tasks (Admin : all , Users :only assigned tasks)
+//@route    GET /api/tasks/
+//@access   Private 
+//@desc     Get all Tasks (Admin : all , Users :only assigned tasks)
+//@route    GET /api/tasks/
+//@access   Private 
 const getTasks = async (req, res) => {
     try {
+        const { status } = req.query;
+        let filter = {};
+
+        if (status) {
+            filter.status = status;
+        }
+
+        let tasks;
+        if (req.user.role === "admin") {
+            tasks = await Task.find(filter).populate(
+                "assignedTo",
+                "name email profileImageUrl"
+            );
+        } else {
+            tasks = await Task.find({ ...filter, assignedTo: req.user._id }).populate(
+                "assignedTo",
+                "name email profileImageUrl"
+            );
+        }
+
+        // Add completed todoChecklist count to each task
+        tasks = await Promise.all(
+            tasks.map(async (task) => {
+                const completedCount = task.todoChecklist.filter(
+                    (item) => item.completed
+                ).length;
+                return { ...task.toObject(), completedTodoCount: completedCount };
+            })
+        );
+
+        // Status summary counts
+        const baseFilter = req.user.role === "admin" ? {} : { assignedTo: req.user._id };
+
+        const allTasks = await Task.countDocuments(baseFilter);
+
+        const pendingTasks = await Task.countDocuments({
+            ...baseFilter,
+            status: "Pending"
+        });
+
+        const inProgressTasks = await Task.countDocuments({
+            ...baseFilter,
+            status: "InProgress"
+        });
+
+        const completedTasks = await Task.countDocuments({
+            ...baseFilter,
+            status: "Completed"
+        });
+
+        res.json({
+            tasks,
+            statusSummary: {
+                all: allTasks,
+                pending: pendingTasks,
+                inProgress: inProgressTasks,
+                completed: completedTasks
+            }
+        });
 
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
-
 };
+
 
 //@desc     Get all Users (Admin only)
 //@route    GET /api/users
