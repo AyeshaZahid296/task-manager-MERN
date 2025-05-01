@@ -181,7 +181,7 @@ const updateTask = async (req, res) => {
             task.assignedTo = req.body.assignedTo;
         }
         const updatedTask = await task.save();
-        res.json({ message: "Task updated successfully", updateTask });
+        res.json({ message: "Task updated successfully", updatedTask });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
