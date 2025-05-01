@@ -198,7 +198,7 @@ const deleteTask = async (req, res) => {
         if (!task) return res.status(404).json({ message: "Task not found" });
 
         await Task.deleteOne();
-        res.json({ message: "Task completed successfully" });
+        res.json({ message: "Task deleted successfully" });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
@@ -210,38 +210,31 @@ const deleteTask = async (req, res) => {
 //@access   Private (Admin)
 const updateTaskStatus = async (req, res) => {
     try {
-        const users = await User.find({ role: "member" }).select("-password");
+        const task = await Task.findById(req.params.id); // Capital T for model
 
-        const usersWithTaskCounts = await Promise.all(
-            users.map(async (user) => {
-                const pendingTasks = await Task.countDocuments({
-                    assignedTo: user._id,
-                    status: "Pending",
-                });
-                const inProgressTasks = await Task.countDocuments({
-                    assignedTo: user._id,
-                    status: "In Progress",
-                });
-                const completedTasks = await Task.countDocuments({
-                    assignedTo: user._id,
-                    status: "Completed",
-                });
+        if (!task) return res.status(404).json({ message: "Task not found" });
 
-                return {
-                    ...user._doc,
-                    pendingTasks,
-                    inProgressTasks,
-                    completedTasks,
-                };
-            })
+        const isAssigned = task.assignedTo.some(
+            (userId) => userId.toString() === req.user._id.toString()
         );
 
-        res.status(200).json(usersWithTaskCounts);
+        if (!isAssigned && req.user.role !== "admin") {
+            return res.status(403).json({ message: "Not authorized" });
+        }
+
+        task.status = req.body.status || task.status;
+
+        if (task.status === "Completed") {
+            task.todoChecklist.forEach((item) => (item.completed = true));
+            task.progress = 100;
+        }
+
+        await task.save();
+        res.json({ message: "Task status updated", task });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
-
 
 //@desc     Get a specific User by ID.
 //@route    GET /api/users/:id
