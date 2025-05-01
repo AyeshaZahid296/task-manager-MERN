@@ -188,12 +188,17 @@ const updateTask = async (req, res) => {
 };
 
 
-//@desc     Get all Users (Admin only)
-//@route    GET /api/users
+//@desc     Delete a task (Admin only)
+//@route    DELETE /api/tasks
 //@access   Private (Admin)
 const deleteTask = async (req, res) => {
     try {
+        const task = await Task.findById(req.params.id);
 
+        if (!task) return res.status(404).json({ message: "Task not found" });
+
+        await Task.deleteOne();
+        res.json({ message: "Task completed successfully" });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
