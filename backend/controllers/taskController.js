@@ -5,6 +5,69 @@ const Task = require("../models/Task");
 //@access   Private (Admin)
 const getDashboardData = async (req, res) => {
     try {
+        //Fetch statistics
+        const totalTasks = await Task.countDocuments();
+        const pendingTasks = await Task.countDocuments({ status: "Pending" });
+        const completedTasks = await Task.countDocuments({ status: "Completed" });
+        const overdueTasks = await Task.countDocuments({
+            status: { $ne: "Completed" },
+            dueDate: { $lt: new Date() },
+        });
+
+        //Ensure all possible statuses are included 
+        const taskStatuses = ["Pending", "In Progress", "Completed"];
+        const taskDistributionRaw = await Task.aggregate([
+            {
+                $group: {
+                    _id: "$status",
+                    count: { $sum: 1 },
+                },
+            },
+        ]);
+
+        const taskDistribution = taskStatuses.reduce((acc, status) => {
+            const formattedKey = status.replace(/\s+/g, ""); //remove spaces from  response key
+            acc[formattedKey] =
+                taskDistributionRaw.find((item) => item._id === status)?.count || 0;
+            return acc;
+        }, {});
+        taskDistribution["All"] = totalTasks;// Add total Count to task distribution
+
+        //Ensure all priority levels are included
+        const taskPriorities = ["Low", "Medium", "High"]
+        const taskPriorityLevelRaw = await Task.aggregate([
+            {
+                $group: {
+                    _id: "$priority",
+                    count: { $sum: 1 },
+                },
+            },
+        ]);
+        const taskPriorityLevels = taskPriorities.reduce((acc, priority) => {
+            acc[priority] =
+                taskPriorityLevelRaw.find((item) => item._id === priority)?.count || 0;
+            return acc;
+        }, {});
+
+        //Fetch recent 10 tasks
+        const recentTasks = await Task.find()
+            .short({ createdAt: -1 })
+            .limit(10)
+            .select("title status priority dueDate createdAt");
+
+        res.status(200).json({
+            statistics: {
+                totalTasks,
+                pendingTasks,
+                completedTasks,
+                overdueTasks,
+            },
+            charts: {
+                taskDistribution,
+                taskPriorityLevels,
+            },
+            recentTasks,
+        });
 
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
@@ -76,7 +139,7 @@ const getTasks = async (req, res) => {
 
         const inProgressTasks = await Task.countDocuments({
             ...baseFilter,
-            status: "InProgress"
+            status: "In Progress"
         });
 
         const completedTasks = await Task.countDocuments({
