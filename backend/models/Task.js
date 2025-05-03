@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 // Todo Schema
 const todoSchema = new mongoose.Schema({
     text: { type: String, required: true },
-    completed: { type: Boolean, required: false },
+    completed: { type: Boolean, default: false },
 });
 
 // Task Schema
@@ -12,11 +12,11 @@ const taskSchema = new mongoose.Schema(
         title: { type: String, required: true },
         description: { type: String },
         priority: { type: String, enum: ["Low", "Medium", "High"], default: "Medium" },
-        status: { type: String, enum: ["Pending", "InProgress", "Completed"], default: "Pending" },
+        status: { type: String, enum: ["Pending", "In Progress", "Completed"], default: "Pending" },
         dueDate: { type: Date, required: true },
-        assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        assignedTo: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
         createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-        attachments: { type: String }, // or [String] if multiple attachments
+        attachments: [{ type: String }], // or [String] if multiple attachments
         todoChecklist: [todoSchema], // corrected this
         progress: { type: Number, default: 0 },
     },
