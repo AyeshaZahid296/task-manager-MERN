@@ -159,76 +159,67 @@ const getUserDashboardData = async (req, res) => {
 //@desc     Get all Tasks (Admin : all , Users :only assigned tasks)
 //@route    GET /api/tasks/
 //@access   Private 
-//@desc     Get all Tasks (Admin : all , Users :only assigned tasks)
-//@route    GET /api/tasks/
-//@access   Private 
 const getTasks = async (req, res) => {
     try {
         const { status } = req.query;
         let filter = {};
-
         if (status) {
             filter.status = status;
         }
-
         let tasks;
         if (req.user.role === "admin") {
             tasks = await Task.find(filter).populate(
                 "assignedTo",
                 "name email profileImageUrl"
-            );
-        } else {
+            )
+        }
+        else {
             tasks = await Task.find({ ...filter, assignedTo: req.user._id }).populate(
                 "assignedTo",
-                "name email profileImageUrl"
-            );
+                "name email  profileImageUrl"
+            )
         }
-
-        // Add completed todoChecklist count to each task
+        // all completed todoChecklist count to each task 
         tasks = await Promise.all(
             tasks.map(async (task) => {
                 const completedCount = task.todoChecklist.filter(
                     (item) => item.completed
                 ).length;
-                return { ...task.toObject(), completedTodoCount: completedCount };
+                return { ...task._doc, completedCount: completedCount };
             })
-        );
-
-        // Status summary counts
-        const baseFilter = req.user.role === "admin" ? {} : { assignedTo: req.user._id };
-
-        const allTasks = await Task.countDocuments(baseFilter);
-
+        )
+        //status summary count 
+        const allTasks = await Task.countDocuments(
+            req.user.role === "admin" ? {} : { assignedTo: req.user._id }
+        )
         const pendingTasks = await Task.countDocuments({
-            ...baseFilter,
-            status: "Pending"
-        });
-
+            ...filter,
+            status: "Pending",
+            ...(req.user.role !== "admin" && { assignedTo: req.user._id }),
+        })
         const inProgressTasks = await Task.countDocuments({
-            ...baseFilter,
-            status: "In Progress"
-        });
-
+            ...filter,
+            status: "In Progress",
+            ...(req.user.role !== "admin" && { assignedTo: req.user._id }),
+        })
         const completedTasks = await Task.countDocuments({
-            ...baseFilter,
-            status: "Completed"
-        });
-
+            ...filter,
+            status: "Completed",
+            ...(req.user.role !== "admin" && { assignedTo: req.user._id }),
+        })
         res.json({
             tasks,
             statusSummary: {
                 all: allTasks,
-                pending: pendingTasks,
-                inProgress: inProgressTasks,
-                completed: completedTasks
-            }
-        });
-
+                pendingTasks,
+                inProgressTasks,
+                completedTasks
+            },
+        })
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Server error", error: error.message })
     }
 };
-
 
 //@desc     Get Task By Id
 //@route    GET /api/tasks/:id
