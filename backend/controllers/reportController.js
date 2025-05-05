@@ -27,23 +27,64 @@ const exportTasksReport = async (req, res) => {
                 .map((user) => `${user.name} (${user.email})`)
                 .join(", ");
             worksheet.addRow({
-
-            })
+                _id: task._id,
+                title: task.title,
+                description: task.description,
+                priority: task.priority,
+                status: task.status,
+                dueDate: task.dueDate.toISOString().split("T")[0],
+                assignedTo: task.assignedTo || "unassigned",
+            });
         });
 
+        res.setHeader(
+            "Content-Type",
+            "application/vnd.openxmlformats.officedocument.spreedsheetml.sheet"
+        );
+        res.setHeader(
+            "Content-Disposition",
+            'attachment; filename="tasks_report.xlsx"'
+        );
+
+        return workbook.xlsx.write(res).then(() => {
+            res.end();
+        })
 
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Error exporting tasks", error: error.message });
     }
 };
 
 
-//@desc     Export user-Task Report
+//@desc     Export user-Task Report as an Excel file
 //@route    GET /api/reports/export/users
 //@access   Private (Admin)
 const exportUsersReport = async (req, res) => {
     try {
+        const users = await User.find().select("name email _id").lean();
+        const userTasks = await Task.find().populate(
+            "assignedTo",
+            "name email _id"
+        );
 
+        const userTaskMap = {};
+        Users.forEach((user) => {
+            userTaskMap[user._id] = {
+                name: user.name,
+                email: user.email,
+                taskCount: 0,
+                pendingTasks: 0,
+                inProgressTasks: 0,
+                completedTasks: 0,
+            }
+        });
+        userTasks.forEach((task) => {
+            if (task.assignedTo) {
+                task.assignedTo.forEach((assignedUser) => {
+                    if (userTaskMap[assignedUser])
+                })
+            }
+        })
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message })
     }
