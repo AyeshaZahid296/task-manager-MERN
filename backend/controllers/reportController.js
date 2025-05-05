@@ -48,7 +48,7 @@ const exportTasksReport = async (req, res) => {
 
         return workbook.xlsx.write(res).then(() => {
             res.end();
-        })
+        });
 
     } catch (error) {
         res.status(500).json({ message: "Error exporting tasks", error: error.message });
@@ -81,10 +81,45 @@ const exportUsersReport = async (req, res) => {
         userTasks.forEach((task) => {
             if (task.assignedTo) {
                 task.assignedTo.forEach((assignedUser) => {
-                    if (userTaskMap[assignedUser])
-                })
+                    if (userTaskMap[assignedUser._id]) {
+                        userTaskMap[assignedUser._id].taskCount += 1;
+                        if (task.status === "Pending") {
+                            userTaskMap[assignedUser._id].pendingTasks += 1;
+                        } else if (task.status === "In Progress") {
+                            userTaskMap[assignedUser._id].inProgressTasks += 1;
+                        } else if (task.status === "Completed") {
+                            userTaskMap[assignedUser._id].completedTasks += 1;
+                        }
+                    }
+                });
             }
-        })
+        });
+
+        const workbook = new excelJS.Workbook();
+        const worksheet = workbook.addWorksheet("User Task Report");
+
+        worksheet.columns = [
+            { header: "User Name", key: "name", width: 30 },
+            { header: "Email", key: "email", width: 40 },
+            { header: "Total Assigned Tasks", key: "taskCount", width: 50 },
+            { header: "Pending Tasks", key: "pendingTasks", width: 15 },
+            { header: "InProgress Tasks", key: "inProgressTasks", width: 20 },
+            { header: "Completed Tasks", key: "completedTasks", width: 20 },
+        ]
+
+        Object.values(userTaskMap).forEach((user) => {
+            worksheet.addRow(user);
+        });
+
+        res.setHeader(
+            "Content-Type",
+            "application/vnd.openxmlformats.officedocument.spreedsheetml.sheet"
+        );
+        res.setHeader(
+            "Content-Disposition",
+            'attachment; filename="tasks_report.xlsx"'
+        );
+
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message })
     }
