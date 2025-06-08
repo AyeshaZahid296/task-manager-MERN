@@ -1,4 +1,4 @@
 import MyTasks from './MyTasks';
-import Dashboard from './UserDashboard';
+import UserDashboard from './UserDashboard';
 
-export { MyTasks, Dashboard }
+export { MyTasks, UserDashboard }
