@@ -125,4 +125,4 @@ const exportUsersReport = async (req, res) => {
     }
 }
 
-module.exports = { exportTasksReport, exportTasksReport }
+module.exports = { exportTasksReport, exportUsersReport }
