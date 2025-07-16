@@ -29,6 +29,17 @@ const Login = () => {
                         placeholder='john@example.com'
                         type='text'
                     />
+                    {error && <p className='text-red-500 text-xs pd-2.5'>{error}</p>}
+                    <button type='submit' className='btn-primary'>
+                        LOGIN
+                    </button>
+                    <p className='text-[13px] text-slate-800 mt-3'>
+                        Don't have an account?{" "}
+                        <Link className='front-medium text-primary underline' to='/signup' >
+                            SignUp
+                        </Link>
+                    </p>
+
                 </form>
             </div>
         </AuthLayout>
