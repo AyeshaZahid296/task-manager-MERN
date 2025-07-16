@@ -12,6 +12,17 @@ const Login = () => {
     //Handle login Form Submit
     const handleLogin = async (e) => {
         e.preventDefault();
+
+        if (!validateEmail(email)) {
+            setError("Please enter a valid email address.");
+            return;
+        }
+        if (!password) {
+            setError("Please enter the password.");
+            return;
+        }
+        setError("");
+        //Login API Call
     };
     return (
         <AuthLayout>
