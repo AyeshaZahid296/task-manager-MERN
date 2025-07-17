@@ -22,6 +22,7 @@ const Login = () => {
             return;
         }
         setError("");
+
         //Login API Call
     };
     return (
