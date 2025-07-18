@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { LuUser, LuUpload, LuTrash } from "react-icons/lu"
 
 const ProfilePhotoSelector = ({ image, setImage }) => {
     const inputRef = useRef(null);
-    const [previewUrl, setPreviewUrl] = useRef(null);
+    const { previewUrl, setPreviewUrl } = useRef(null);
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];

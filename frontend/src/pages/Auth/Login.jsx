@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import AuthLayout from '../../components/layout/AuthLayout'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -38,9 +38,18 @@ const Login = () => {
                         value={email}
                         onChange={({ target }) => setEmail(target.value)}
                         label="Email Address"
-                        placeholder='john@example.com'
+                        placeholder='ayesha@example.com'
                         type='text'
                     />
+
+                    <input
+                        value={password}
+                        onChange={({ target }) => setPassword(target.value)}
+                        label="Password"
+                        placeholder='Min 8 Characters'
+                        type='password'
+                    />
+
                     {error && <p className='text-red-500 text-xs pd-2.5'>{error}</p>}
                     <button type='submit' className='btn-primary'>
                         LOGIN
