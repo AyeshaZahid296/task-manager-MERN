@@ -5,6 +5,9 @@ import axiosInstance from '../../utils/axiosInstance';
 import { API_PATHS } from '../../utils/apiPaths';
 import { UserContext } from '../../context/userContext';
 
+import Inputs from '../../components/inputs/Inputs';
+import { validateEmail } from '../../utils/helper';
+
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -62,7 +65,7 @@ const Login = () => {
                 </p>
 
                 <form onSubmit={handleLogin}>
-                    <input
+                    <Inputs
                         value={email}
                         onChange={({ target }) => setEmail(target.value)}
                         label="Email Address"
@@ -70,7 +73,8 @@ const Login = () => {
                         type='text'
                     />
 
-                    <input
+
+                    <Inputs
                         value={password}
                         onChange={({ target }) => setPassword(target.value)}
                         label="Password"

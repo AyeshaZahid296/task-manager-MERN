@@ -1,16 +1,15 @@
-import React, { useRef } from 'react'
-import { LuUser, LuUpload, LuTrash } from "react-icons/lu"
+import React, { useRef, useState } from 'react';
+import { LuUser, LuUpload, LuTrash } from "react-icons/lu";
 
 const ProfilePhotoSelector = ({ image, setImage }) => {
     const inputRef = useRef(null);
-    const { previewUrl, setPreviewUrl } = useRef(null);
+    const [previewUrl, setPreviewUrl] = useState(null);
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         if (file) {
             //Update the image state
-            setImage(file);
-
+            setImage(file);;
             //Generate preview URL from the file
             const preview = URL.createObjectURL(file);
             setPreviewUrl(preview);
@@ -67,4 +66,4 @@ const ProfilePhotoSelector = ({ image, setImage }) => {
     )
 }
 
-export default ProfilePhotoSelector
+export default ProfilePhotoSelector;

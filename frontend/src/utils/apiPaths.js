@@ -2,7 +2,7 @@ export const BASE_URL = "http://localhost:8000";
 
 export const API_PATHS = {
     AUTH: {
-        Register: "/api/auth/register", // Register a new user (Admin or Member)
+        REGISTER: "/api/auth/register", // Register a new user (Admin or Member)
         LOGIN: "/api/auth/login", // Authenticate user & return JWT tocken
         GET_PROFILE: "/api/auth/profile", // Get logged-in uder details
     },

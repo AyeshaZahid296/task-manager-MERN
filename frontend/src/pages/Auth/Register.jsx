@@ -5,13 +5,16 @@ import { Link, useNavigate } from 'react-router-dom'
 import { API_PATHS } from '../../utils/apiPaths';
 import axiosInstance from '../../utils/axiosInstance';
 import { UserContext } from '../../context/userContext';
+import uploadImage from '../../utils/uploadImage';
+import Inputs from '../../components/inputs/Inputs';
+import { validateEmail } from '../../utils/helper';
 
 const Register = () => {
     const [profilePic, setProfilePic] = useState(null);
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [adminInviteTocken, setAdminInviteTocken] = useState("");
+    const [adminInviteToken, setAdminInviteToken] = useState("");
 
     const [error, setError] = useState(null);
 
@@ -50,7 +53,8 @@ const Register = () => {
                 name: fullName,
                 email,
                 password,
-                adminInviteTocken
+                adminInviteToken,
+                profilePic: profileImageUrl
             });
             const { token, role } = response.data;
 
@@ -84,7 +88,7 @@ const Register = () => {
                 <form onSubmit={handleRegister}>
                     <ProfilePhotoSelector image={profilePic} setImage={setProfilePic} />
                     <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                        <input
+                        <Inputs
                             value={fullName}
                             onChange={({ target }) => setFullName(target.value)}
                             label='Full Name'
@@ -92,7 +96,7 @@ const Register = () => {
                             type="text"
                         />
 
-                        <input
+                        <Inputs
                             value={email}
                             onChange={({ target }) => setEmail(target.value)}
                             label="Email Address"
@@ -100,7 +104,7 @@ const Register = () => {
                             type='text'
                         />
 
-                        <input
+                        <Inputs
                             value={password}
                             onChange={({ target }) => setPassword(target.value)}
                             label="Password"
@@ -108,21 +112,21 @@ const Register = () => {
                             type='password'
                         />
 
-                        <input
-                            value={password}
-                            onChange={({ target }) => setPassword(target.value)}
+                        <Inputs
+                            value={adminInviteToken}
+                            onChange={({ target }) => setAdminInviteToken(target.value)}
                             label="Admin Invite Token"
                             placeholder='6 Digit Code'
                             type='text'
                         />
                     </div>
 
-                    {error && <p className='text-red-500 text-xs pd-2.5'>{error}</p>}
+                    {error && <p className='text-red-500 text-xs py-2.5'>{error}</p>}
                     <button type='submit' className='btn-primary'>
                         REGISTER
                     </button>
                     <p className='text-[13px] text-slate-800 mt-3'>
-                        Already an account?{" "}
+                        Already have an account?{" "}
                         <Link className='front-medium text-primary underline' to='/login' >
                             Login
                         </Link>
