@@ -1,7 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import { API_PATHS } from "../utils/apiPaths";
-import { Children } from "react";
 
 export const UserContext = createContext();
 
@@ -10,7 +9,7 @@ const UserProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);// New state to track loading
 
     useEffect(() => {
-        if (user) return;
+        //if (user) return;
 
         const accessToken = localStorage.getItem("token");
         if (!accessToken) {
