@@ -9,7 +9,7 @@ const Dashboard = () => {
 
     const { user } = useContext(UserContext)
     return (
-        <DashboardLayout>Dashboard</DashboardLayout>
+        <DashboardLayout activeMenu="Dashboard">Dashboard</DashboardLayout>
     )
 };
 
