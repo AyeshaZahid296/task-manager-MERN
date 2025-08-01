@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from 'react-router-dom';
 import { Login, Register } from './pages/Auth';
 import { ManageUsers, CreateTask, ManageTasks, Dashboard } from './pages/Admin';
@@ -41,7 +41,7 @@ const App = () => {
 export default App;
 
 const Root = () => {
-  const { user, loading } = UserContext(UserContext);
+  const { user, loading } = useContext(UserContext);
 
   if (loading) return <Outlet />
 
