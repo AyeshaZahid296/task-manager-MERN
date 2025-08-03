@@ -42,9 +42,9 @@ const Dashboard = () => {
         setPieChartData(taskDistributionData);
 
         const PriorityLevelData = [
-            { status: "Low", count: taskPriorityLevels?.Low || 0 },
-            { status: "Medium", count: taskPriorityLevels?.Medium || 0 },
-            { status: "High", count: taskPriorityLevels?.High || 0 }
+            { priority: "Low", count: taskPriorityLevels?.Low || 0 },
+            { priority: "Medium", count: taskPriorityLevels?.Medium || 0 },
+            { priority: "High", count: taskPriorityLevels?.High || 0 }
         ];
 
         setBarChartData(PriorityLevelData);
