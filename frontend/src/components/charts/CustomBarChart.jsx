@@ -27,7 +27,6 @@ const CustomBarChart = ({ data }) => {
 
     const CustomTooltip = ({ active, payload }) => {
         if (active && payload && payload.length) {
-            // const item = payload[0]?.payload;
             return (
                 <div className="bg-white shadow-md rounded-lg p-2 border border-gray-300">
                     <p className="text-xs font-semibold text-purple-800 mb-1">
