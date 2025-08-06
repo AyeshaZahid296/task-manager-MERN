@@ -18,6 +18,7 @@ const AvatarGroup = ({ avatars, maxVisible = 3 }) => {
                 </div>
             )}
         </div>
+
     )
 }
 export default AvatarGroup
