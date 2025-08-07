@@ -7,7 +7,7 @@ import AvatarGroup from '../AvatarGroup';
 
 const SelectUsers = ({ SelectUsers, setSelectedUsers }) => {
     const [allUsers, setAllUsers] = useState([]);
-    const [isModalOpen, setIsModalOpen] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [tempSelectedUsers, setTempSelectedUsers] = useState([]);
 
     const getAllUsers = async () => {
