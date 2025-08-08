@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { HiOutlineTrash, HiMiniPlus } from 'react-icons/hi';
+import { HiMiniPlus, HiOutlineTrash } from 'react-icons/hi';
 import { LuPaperclip } from 'react-icons/lu';
 
 const AddAttachmentsInput = ({ attachments, setAttachments }) => {
