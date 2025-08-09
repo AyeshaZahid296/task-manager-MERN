@@ -52,7 +52,7 @@ const SelectUsers = ({ selectedUsers, setSelectedUsers }) => {
 
     return (
         <div className='space-y-4 mt-2'>
-            {selectedUserAvatars.legth === 0 && (
+            {selectedUserAvatars.length === 0 && (
                 <button
                     className='card-btn'
                     onClick={() => setIsModalOpen(true)}
@@ -81,12 +81,12 @@ const SelectUsers = ({ selectedUsers, setSelectedUsers }) => {
                             className='flex items-center gap-4 p-3 border-b border-gap-200'
                         >
                             <img
-                                src={user.profileImageUrl}
+                                src={user.profileImageUrl || "/default-avatar.jpg"}
                                 alt={user.name}
                                 className='w-10 h-10 rounded-full'
                             />
                             <div className='flex-1'>
-                                <p className='font-medium text-gray-800 dark:text-white'>
+                                <p className='font-medium text-gray-800 '>
                                     {user.name}
                                 </p>
                                 <p className='text-[13px] text-gray-500 '>
@@ -109,7 +109,7 @@ const SelectUsers = ({ selectedUsers, setSelectedUsers }) => {
                         className='card-btn'
                         onClick={() => setIsModalOpen(false)}
                     >
-                        CANCLE
+                        CANCEL
                     </button>
 
                     <button
