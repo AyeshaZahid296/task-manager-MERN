@@ -5,7 +5,7 @@ import { LuUsers } from 'react-icons/lu';
 import Modal from '../Modal';
 import AvatarGroup from '../AvatarGroup';
 
-const SelectUsers = ({ SelectUsers, setSelectedUsers }) => {
+const SelectUsers = ({ selectedUsers, setSelectedUsers }) => {
     const [allUsers, setAllUsers] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [tempSelectedUsers, setTempSelectedUsers] = useState([]);
@@ -35,7 +35,7 @@ const SelectUsers = ({ SelectUsers, setSelectedUsers }) => {
     };
 
     const selectedUserAvatars = allUsers
-        .filter((user) => selectedUsers.includes(user._id))
+        .filter((user) => selectedUsers?.includes(user._id))
         .map((user) => user.profileImageUrl);
 
     useEffect(() => {
@@ -43,7 +43,7 @@ const SelectUsers = ({ SelectUsers, setSelectedUsers }) => {
     }, []);
 
     useEffect(() => {
-        if (selectedUsers.length === 0) {
+        if (selectedUsers?.length === 0) {
             setTempSelectedUsers([])
         };
 
