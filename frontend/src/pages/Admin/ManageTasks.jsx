@@ -98,7 +98,7 @@ const ManageTasks = () => {
                             key={item._id}
                             title={item.title}
                             description={item.description}
-                            priority={item.description}
+                            priority={item.priority}
                             status={item.status}
                             progress={item.progress}
                             createdAt={item.createdAt}
