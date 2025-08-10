@@ -12,6 +12,7 @@ import SelectUsers from '../../components/inputs/SelectUsers'
 import AddAttachmentsInput from '../../components/inputs/AddAttachmentsInput'
 import TodoListInput from '../../components/inputs/TodoListInput'
 import Modal from '../../components/Modal'
+import DeleteAlert from '../../components/DeleteAlert'
 
 const CreateTask = () => {
     const location = useLocation();
@@ -333,11 +334,11 @@ const CreateTask = () => {
 
             <Modal
                 isOpen={openDeleteAlert}
-                isClose={() => setOpenDeleteAlert(false)}
+                onClose={() => setOpenDeleteAlert(false)}
                 title="Delete Task"
             >
                 <DeleteAlert
-                    content="Are yu sure you want to delete this task?"
+                    content="Are you sure you want to delete this task?"
                     onDelete={() => deleteTask()}
                 />
             </Modal>
