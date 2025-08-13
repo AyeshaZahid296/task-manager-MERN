@@ -348,6 +348,21 @@ const updateTaskStatus = async (req, res) => {
             task.todoChecklist.forEach((item) => (item.completed = true));
             task.progress = 100;
         }
+        if (task.status === "Completed") {
+            task.todoChecklist.forEach((item) => (item.completed = true));
+            task.progress = 100;
+
+            // Example: Update project taskDoneCount
+            await Project.findByIdAndUpdate(task.projectId, {
+                $inc: { taskDoneCount: 1 }
+            });
+
+            // Example: Update user taskDoneCount
+            await User.updateMany(
+                { _id: { $in: task.assignedTo } },
+                { $inc: { taskDoneCount: 1 } }
+            );
+        }
 
         await task.save();
         res.json({ message: "Task status updated", task });
@@ -368,6 +383,13 @@ const updateTaskChecklist = async (req, res) => {
 
         if (!task.assignedTo.includes(req.user._id) && req.user.role !== "admin") {
             return res.status(403).json({ message: "Not authorized to update checklist" })
+        }
+        // Due date constraint — block updates after due date
+        const now = new Date();
+        if (now > task.dueDate) {
+            return res.status(400).json({
+                message: "Task due date has passed. Checklist can no longer be updated."
+            });
         }
 
         task.todoChecklist = todoChecklist;// Replace with updated checklist
