@@ -6,6 +6,7 @@ import DashboardLayout from '../../components/layout/DashboardLayout';
 import moment from 'moment';
 import AvatarGroup from '../../components/AvatarGroup';
 import { LuSquareArrowOutUpRight } from 'react-icons/lu';
+import toast from "react-hot-toast";
 
 const ViewTaskDetails = () => {
     const { id } = useParams();
@@ -40,8 +41,43 @@ const ViewTaskDetails = () => {
         }
     };
 
+
     // handle todo check
-    const updateTodoChecklist = async (index) => { };
+    const updateTodoChecklist = async (index) => {
+        const todoChecklist = [...task?.todoChecklist];
+        const taskId = id.trim();
+
+        // Check due date constraint before updating
+        const now = new Date();
+        const dueDate = new Date(task?.dueDate);
+
+        if (now > dueDate) {
+            toast.error("This task's due date has passed. Checklist can no longer be updated.", {
+                position: "top-center",
+                autoClose: 3000, // 3 seconds
+            });
+            return; // Stop execution
+        }
+
+        if (todoChecklist && todoChecklist[index]) {
+            todoChecklist[index].completed = !todoChecklist[index].completed;
+
+            try {
+                const response = await axiosInstance.put(
+                    API_PATHS.TASKS.UPDATE_TODO_CHECKLIST(taskId),
+                    { todoChecklist }
+                );
+                if (response.status === 200) {
+                    setTask(response.data?.task || task);
+                } else {
+                    // Revert toggle if API call fails
+                    todoChecklist[index].completed = !todoChecklist[index].completed;
+                }
+            } catch (error) {
+                todoChecklist[index].completed = !todoChecklist[index].completed;
+            }
+        }
+    };
 
     // Handle attachment link lick
     const handleLinkClick = (link) => {
