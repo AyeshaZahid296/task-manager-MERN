@@ -8,12 +8,12 @@ import axiosInstance from '../../utils/axiosInstance';
 import { API_PATHS } from '../../utils/apiPaths';
 import moment from 'moment/moment';
 import { IoMdCard } from "react-icons/io"
-import InfoCard from '../../components/Cards/InfoCard';
+import InfoCard from '../../components/cards/InfoCard';
 import { addThousandsSeparator } from '../../utils/helper';
 import { LuArrowRight } from 'react-icons/lu';
 import TaskListTable from '../../components/TaskListTable';
-import CustomPieChart from '../../components/Charts/CustomPieChart';
-import CustomBarChart from '../../components/Charts/CustomBarChart';
+import CustomPieChart from '../../components/charts/CustomPieChart';
+import CustomBarChart from '../../components/charts/CustomBarChart';
 
 const COLORS = ['#8d51ff', '#00b8db', '#7bce00'];
 
